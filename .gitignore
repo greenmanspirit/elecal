@@ -1,1 +1,8 @@
 node_modules
+app/css/*.css
+app/fonts/*.eot
+app/fonts/*.svg
+app/fonts/*.ttf
+app/fonts/*.woff
+app/fonts/*.woff2
+app/js/*.js
