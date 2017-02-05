@@ -38,9 +38,15 @@ let MainInterface = React.createClass({
       unlockAccountsVisible: false,
       addAccountVisible: false,
       showSplash: true,
-      showAccounts: false
+      showAccounts: false,
     }
   }, //getInitialState
+
+  componentDidMount: function() {
+    ipcRenderer.on('showAccounts', function(event, message) {
+      this.toggleAccounts();
+    }.bind(this));
+  },
 
   toggleUnlockAccounts: function() {
     let temp = !this.state.unlockAccountsVisible;
@@ -55,6 +61,13 @@ let MainInterface = React.createClass({
       addAccountVisible: temp
     }); //setState
   }, //toggleUnlockDisplay
+
+  toggleAccounts: function() {
+    let temp = !this.state.showAccounts;
+    this.setState({
+      showAccounts: temp
+    });
+  },
 
   handleUnlock: function(password) {
     // Config file creation if needed
@@ -75,8 +88,7 @@ let MainInterface = React.createClass({
         accounts: tmpAccounts,
         password: password,
         unlockAccountsVisible: false,
-        showSplash: false,
-        showAccounts: true
+        showSplash: false
       }); //setState
     }.bind(this));
   }, //handleUnlock
@@ -101,8 +113,6 @@ let MainInterface = React.createClass({
   },
 
   render: function() {
-    console.log(this.state);
-
     if(this.state.unlockAccountsVisible === true) {
       $('#unlockAccounts').modal('show');
     } else {
