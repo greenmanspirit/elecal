@@ -11,6 +11,7 @@ const ReactDOM = require('react-dom');
 let UnlockAccounts = require('./components/UnlockAccounts');
 let Splash = require('./components/Splash');
 let Accounts = require('./components/Accounts');
+let Account = require('./components/Account');
 let AddAccount = require('./components/AddAccount');
 
 let config_path = ipcRenderer.sendSync('getConfigDir');
@@ -36,7 +37,8 @@ let MainInterface = React.createClass({
       accounts: [],
       unlockAccountsVisible: false,
       addAccountVisible: false,
-      showSplash: true
+      showSplash: true,
+      showAccounts: false
     }
   }, //getInitialState
 
@@ -73,7 +75,8 @@ let MainInterface = React.createClass({
         accounts: tmpAccounts,
         password: password,
         unlockAccountsVisible: false,
-        showSplash: false
+        showSplash: false,
+        showAccounts: true
       }); //setState
     }.bind(this));
   }, //handleUnlock
@@ -118,10 +121,16 @@ let MainInterface = React.createClass({
       $('#splash').css('display', 'none');
     }
 
+    if(this.state.showAccounts === true) {
+      $('#accounts').css('display', 'block');
+    } else {
+      $('#accounts').css('display', 'none');
+    }
+
     let accounts = this.state.accounts;
     accounts = accounts.map(function(account, index) {
       return(
-      <Accounts key={index}
+      <Account key={index}
         singleAccount = {account}
         whichAccount = {account}
         handleDeleteAccount = {this.handleDeleteAccount}
@@ -141,14 +150,10 @@ let MainInterface = React.createClass({
         <Splash
           handleUnlockToggle = {this.toggleUnlockAccounts}
         />
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-sm-12">
-              <button type="button" className="btn" onClick={this.toggleAddAccount}>Add Account</button>
-            </div>
-          </div>
-        </div>
-        <ul className="accounts">{accounts}</ul>
+        <Accounts
+          handleAddAccountToggle = {this.toggleAddAccount}
+          accounts = {accounts}
+        />
       </div>
     );
   } //render

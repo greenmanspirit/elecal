@@ -18,3 +18,8 @@ html, body {
   top: 50%;
   transform: translateY(-55%);
 }
+
+#accounts {
+  display: none;
+  height: 100vh;
+}

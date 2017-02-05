@@ -1,22 +1,30 @@
 const React = require('react');
 
-let Accounts = React.createClass({
-  handleDelete: function() {
-    this.props.handleDeleteAccount(this.props.whichAccount);
+let Account = React.createClass({
+  toggleAddAccount: function () {
+    this.props.handleAddAccountToggle();
   },
   render: function() {
     return(
-      <li className="account media">
-        <div className="media-left">
-          <button className="account-delete btn btn-xs btn-danger" onClick={this.handleDelete}>
-          <span className="glyphicon glyphicon-remove"></span></button>
+      <div id="accounts">
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-sm-12">
+              <h2>Your Calendar Accounts</h2>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-sm-12">
+              <button type="button" className="btn" onClick={this.toggleAddAccount}>
+                <span className="toolbar-item-button glyphicon glyphicon-plus-sign"></span>
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="account-info media-body">
-          <span className="account-name">{this.props.singleAccount.name}</span>
-        </div>
-      </li>
+        <ul className="accounts">{this.props.accounts}</ul>
+      </div>
     )
 }
 }); //Accounts
 
-module.exports = Accounts;
+module.exports = Account;
