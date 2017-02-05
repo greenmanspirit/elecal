@@ -35,7 +35,7 @@ let menuTemplate = [
       {role: 'cut'},
       {role: 'copy'},
       {role: 'paste'},
-      {role: 'separator'},
+      {type: 'separator'},
       {
         label: 'Accounts',
         click(item, focusedWindow) {
