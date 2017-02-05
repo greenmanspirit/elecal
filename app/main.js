@@ -1,10 +1,7 @@
 const {BrowserWindow, app} = require('electron');
 
-app.on('ready', () => {
-    let appWindow = new BrowserWindow({show: false});
-    appWindow.once('ready-to-show', () => {
-        appWindow.show();
-    });
+app.on('ready', function() {
+    let appWindow = new BrowserWindow({backgroundColor: '#fafafa'});
     appWindow.loadURL('file://' + __dirname + '/index.html');
     appWindow.on('closed', function() {
         mainWindow = null;
