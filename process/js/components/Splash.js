@@ -6,7 +6,7 @@ let UnlockAccounts = React.createClass({
     },
     render: function() {
       return(
-        <div className="container">
+        <div id="splash" className="container">
         <div className="row splash">
           <div className="col-sm-6 col-sm-offset-3 vcenter">
             <h1>Elecal</h1>
