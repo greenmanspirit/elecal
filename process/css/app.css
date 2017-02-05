@@ -1,1 +1,20 @@
 @import url('../../node_modules/bootstrap/dist/css/bootstrap.css');
+
+html, body {
+  background-color: #fafafa;
+}
+
+.splash {
+  height: 100vh;
+  background-color: inherit;
+}
+
+.splash div {
+  text-align: center;
+}
+
+.vcenter {
+  position: relative;
+  top: 50%;
+  transform: translateY(-55%);
+}
