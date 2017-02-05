@@ -1,5 +1,16 @@
 const {BrowserWindow, app, ipcMain, Menu} = require('electron');
 const path = require('path');
+const fs = require('fs');
+
+let config_path = path.join(process.env.HOME, '.config', 'elecal');
+ipcMain.on('getConfigDir', (event, arg) => {
+  event.returnValue = config_path;
+});
+fs.access(config_path, fs.constants.R_OK | fs.constants.W_OK, function(err) {
+  if(err) {
+    fs.mkdirSync(config_path, 0o700);
+  }
+});
 
 // Get the window up and running
 app.on('ready', function() {
@@ -13,11 +24,6 @@ app.on('window-all-closed', function() {
     if (process.platform != 'darwin') {
         app.quit();
     }
-});
-
-let config_path = path.join(process.env.HOME, '.config', 'elecal');
-ipcMain.on('getConfigDir', (event, arg) => {
-  event.returnValue = config_path;
 });
 
 let menuTemplate = [
