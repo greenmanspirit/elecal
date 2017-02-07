@@ -164,6 +164,9 @@ let MainInterface = React.createClass({
      */
     // Display/Hide UnlockAccounts modal
     if(this.state.showUnlockAccounts === true) {
+      $('#unlockAccounts').on('shown.bs.modal', function() {
+        $('#password').focus();
+      });
       $('#unlockAccounts').modal('show');
     } else {
       $('#unlockAccounts').modal('hide');
@@ -172,6 +175,9 @@ let MainInterface = React.createClass({
     // Dislay/Hide AddAccount modal
     if(this.state.showAddAccount === true) {
       $('#addAccount').modal('show');
+      $('#addAccount').on('shown.bs.modal', function() {
+        $('#name').focus();
+      });
     } else {
       $('#addAccount').modal('hide');
     }
