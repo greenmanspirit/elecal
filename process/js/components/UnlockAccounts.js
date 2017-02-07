@@ -1,13 +1,31 @@
+/*
+ * The UnlockAccounts Component is a modal for unlocking (getting the password
+ *   to be able to decypt the users account config file) the accounts.
+ */
+
+/*
+ * Imports
+ */
 const React = require('react');
 
+/*
+ * React Code
+ */
 let UnlockAccounts = React.createClass({
+  // Pass onto the parent component that the user wants to hide the
+  //   UnlockAccount modal.
   toggleUnlockAccounts: function() {
-    this.props.handleUnlockToggle();
-  },
-  handleUnlock: function(e) {
+    this.props.toggleUnlockAccounts();
+  }, //toggleUnlockAccounts
+
+  // Gather the passord from the form and pass it to the parent component to
+  //   unlock the acccounts.
+  unlockAccounts: function(e) {
     e.preventDefault();
-    this.props.handleUnlock(this.inputPassword.value);
-  },
+    this.props.unlockAccounts(this.inputPassword.value);
+  }, //unlockAccounts
+
+  // Renders the component
   render: function() {
     return(
       <div className="modal fade" id="unlockAccounts" tabIndex="-1" role="dialog">
@@ -18,7 +36,7 @@ let UnlockAccounts = React.createClass({
               <h4 className="modal-title">Unlock Your Accounts</h4>
             </div>
 
-            <form className="modal-body add-appointment form-horizontal" onSubmit={this.handleUnlock}>
+            <form className="modal-body add-appointment form-horizontal" onSubmit={this.unlockAccounts}>
               <div className="form-group">
                 <div className="col-sm-12">
                   <input type="text" className="form-control" id="password" ref={(ref) => this.inputPassword = ref} placeholder="Password" />

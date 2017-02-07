@@ -1,9 +1,22 @@
+/* Import Bootstrap */
 @import url('../../node_modules/bootstrap/dist/css/bootstrap.css');
 
+/*
+ * Universal styling
+ */
 html, body {
   background-color: #fafafa;
 }
 
+.vcenter {
+  position: relative;
+  top: 50%;
+  transform: translateY(-55%);
+}
+
+/*
+ * Splash component styling
+ */
 .splash {
   height: 100vh;
   background-color: inherit;
@@ -13,12 +26,9 @@ html, body {
   text-align: center;
 }
 
-.vcenter {
-  position: relative;
-  top: 50%;
-  transform: translateY(-55%);
-}
-
+/*
+ * Accounts component styling
+ */
 #accounts {
   display: none;
   height: 100vh;

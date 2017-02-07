@@ -1,109 +1,154 @@
+/*
+ * This script contains the code for the Electron Renderer process. It also uses
+ *   React to create the user interface and respond to interface events.
+ */
+
+/*
+ * Imports
+ */
+// Node.js imports that will not work with browserify require
+const path = window.require('path');
+const fs = window.require('fs');
+const ipc = window.require('electron').ipcRenderer;
+const crypto = window.require('crypto');
+
+// Imports that work with browserify require
 const $ = jQuery = require('jquery');
 const _ = require('lodash');
 const bootstrap = require('bootstrap');
-const path = window.require('path');
-const fs = window.require('fs');
-const ipcRenderer = window.require('electron').ipcRenderer;
-const crypto = window.require('crypto');
 const React = require('react');
 const ReactDOM = require('react-dom');
 
+// Import all of our React components
 let UnlockAccounts = require('./components/UnlockAccounts');
 let Splash = require('./components/Splash');
 let Accounts = require('./components/Accounts');
 let Account = require('./components/Account');
 let AddAccount = require('./components/AddAccount');
 
-let config_path = ipcRenderer.sendSync('getConfigDir');
+/*
+ * Config file management
+ */
+let config_path = ipc.sendSync('getConfigDir');
 let account_config = path.join(config_path, 'accounts');
+
+// Load Accounts from encrypted config file
 function loadAccounts(password) {
   let encrypted_accounts = fs.readFileSync(account_config, {encoding: 'utf8'});
   let decipher = crypto.createDecipher('aes-256-ctr', password)
   let accounts = decipher.update(encrypted_accounts, 'base64', 'utf8')
   accounts += decipher.final('utf8');
   return JSON.parse(accounts);
-}
+} //loadAccounts
+
+// Save Accounts to encrypted config file
 function saveAccounts(password, accounts) {
   let cipher = crypto.createCipher('aes-256-ctr', password);
   let encrypted_accounts = cipher.update(JSON.stringify(accounts), 'utf8', 'base64');
   encrypted_accounts += cipher.final('base64');
   fs.writeFileSync(account_config, encrypted_accounts, {encoding: 'utf8'});
-}
+} //saveAccounts
 
+/*
+ * React Code
+ */
 let MainInterface = React.createClass({
+  /*
+   * React lifecycle methods
+   */
+  // Set the initial state of the application
   getInitialState: function() {
     return {
       password: '',
       accounts: [],
-      unlockAccountsVisible: false,
-      addAccountVisible: false,
+      showUnlockAccounts: false,
+      showAddAccount: false,
       showSplash: true,
-      showAccounts: false,
+      showAccounts: false
     }
   }, //getInitialState
 
+  // Component has loaded but has not rendered
   componentDidMount: function() {
-    ipcRenderer.on('showAccounts', function(event, message) {
+    // This event shows/hides the Account component. This is here to be
+    //   triggered by the main process when a user selects the 'Accounts' menu
+    //   option.
+    ipc.on('showAccounts', function(event, message) {
       this.toggleAccounts();
-    }.bind(this));
-  },
+    }.bind(this)); //showAccounts
+  }, //componentDidMount
 
+  // Toggles the visibility of the UnlockAccounts modal
   toggleUnlockAccounts: function() {
-    let temp = !this.state.unlockAccountsVisible;
+    let temp = !this.state.showUnlockAccounts;
     this.setState({
-      unlockAccountsVisible: temp
+      showUnlockAccounts: temp
     }); //setState
   }, //toggleUnlockDisplay
 
+  // Toggles the visibility of the AddAccount modal
   toggleAddAccount: function() {
-    let temp = !this.state.addAccountVisible;
+    let temp = !this.state.showAddAccount;
     this.setState({
-      addAccountVisible: temp
+      showAddAccount: temp
     }); //setState
   }, //toggleUnlockDisplay
 
+  // Toggles the visibility of the Accounts component
   toggleAccounts: function() {
     let temp = !this.state.showAccounts;
     this.setState({
       showAccounts: temp
-    });
-  },
+    }); //setState
+  }, //toggleAccounts
 
-  handleUnlock: function(password) {
-    // Config file creation if needed
+  // This function takes care of unlocking the application. The unlock is there
+  //   for security. You can only load the account config file with the password
+  //   gathered here as that password is the encryption key for the config file.
+  unlockAccounts: function(password) {
+    // Test to see if the file can be written and read.
     fs.access(account_config, fs.constants.R_OK | fs.constants.W_OK, function(err) {
       let tmpAccounts = this.state.accounts;
+      // If there is an error, try creating the config file.
       if(err) {
+        // Encrypt tmpAccounts and encode at base64
         let cipher = crypto.createCipher('aes-256-ctr', password);
         let crypted = cipher.update(JSON.stringify(tmpAccounts), 'utf8', 'base64');
         crypted += cipher.final('base64');
+        // Open account_config with 'w' and mode 0o600 so we can create the
+        //   initial config file for the user. Since this is config data, I use
+        //   writeSync.
         fs.open(account_config, 'w', 0o600, function(err, fd) {
           fs.writeSync(fd, crypted);
           fs.close(fd);
-        });
+        }); //fs.open
       } else {
+        // There wasn't an error, so lets load the acccounts
         tmpAccounts = loadAccounts(password);
       }
+      // Set the post unlock state
       this.setState({
         accounts: tmpAccounts,
         password: password,
-        unlockAccountsVisible: false,
+        showUnlockAccounts: false,
         showSplash: false
       }); //setState
-    }.bind(this));
-  }, //handleUnlock
+    }.bind(this)); //fs.access
+  }, //unlockAccounts
 
-  handleAddAccount: function(values) {
-      let tmpAccounts = this.state.accounts;
-      tmpAccounts.push(values);
-      this.setState({
-        accounts: tmpAccounts,
-        addAccountVisible: false
-      }); //setState
-      saveAccounts(this.state.password, tmpAccounts);
-  }, //handleAddAccount
+  // Adds a new account
+  addAccount: function(values) {
+    let tmpAccounts = this.state.accounts;
+    tmpAccounts.push(values);
+    this.setState({
+      accounts: tmpAccounts,
+      showAddAccount: false
+    }); //setState
+    saveAccounts(this.state.password, tmpAccounts);
+  }, //addAccount
 
-  handleDeleteAccount: function(account) {
+  // Deletes an account
+  deleteAccount: function(account) {
     let tmpAccounts = this.state.accounts;
     tmpAccounts = _.without(tmpAccounts, account);
     this.setState({
@@ -112,63 +157,74 @@ let MainInterface = React.createClass({
     saveAccounts(this.state.password, tmpAccounts);
   },
 
+  // Renders the component
   render: function() {
-    if(this.state.unlockAccountsVisible === true) {
+    /*
+     * Display/Hide components/modals with jQuery
+     */
+    // Display/Hide UnlockAccounts modal
+    if(this.state.showUnlockAccounts === true) {
       $('#unlockAccounts').modal('show');
     } else {
       $('#unlockAccounts').modal('hide');
     }
 
-    if(this.state.addAccountVisible === true) {
+    // Dislay/Hide AddAccount modal
+    if(this.state.showAddAccount === true) {
       $('#addAccount').modal('show');
     } else {
       $('#addAccount').modal('hide');
     }
 
+    // Dislay/Hide Splash Component
     if(this.state.showSplash === true) {
       $('#splash').css('display', 'block');
     } else {
       $('#splash').css('display', 'none');
     }
 
+    // Display/Hide Accounts Component
     if(this.state.showAccounts === true) {
       $('#accounts').css('display', 'block');
     } else {
       $('#accounts').css('display', 'none');
     }
 
+    // Build out the account list using the Account component
     let accounts = this.state.accounts;
     accounts = accounts.map(function(account, index) {
       return(
-      <Account key={index}
-        singleAccount = {account}
-        whichAccount = {account}
-        handleDeleteAccount = {this.handleDeleteAccount}
-      />);
-    }.bind(this));
+        <Account key = {index}
+          account = {account}
+          deleteAccount = {this.deleteAccount}
+        />
+      ); //return
+    }.bind(this)); //accounts.map
 
-    return (
+    // Now that everything is set above, render the component
+    return(
       <div className="application">
         <UnlockAccounts
-          handleUnlockToggle = {this.toggleUnlockAccounts}
-          handleUnlock = {this.handleUnlock}
+          toggleUnlockAccounts = {this.toggleUnlockAccounts}
+          unlockAccounts = {this.unlockAccounts}
         />
         <AddAccount
-          handleAddAccountToggle = {this.toggleAddAccount}
-          handleAddAccount = {this.handleAddAccount}
+          toggleAddAccount = {this.toggleAddAccount}
+          addAccount = {this.addAccount}
         />
         <Splash
-          handleUnlockToggle = {this.toggleUnlockAccounts}
+          toggleUnlockAccounts = {this.toggleUnlockAccounts}
         />
         <Accounts
-          handleAddAccountToggle = {this.toggleAddAccount}
+          toggleAddAccount = {this.toggleAddAccount}
           accounts = {accounts}
         />
       </div>
-    );
+    ); //return
   } //render
 }); //MainInterface
 
+// Place the MainInterface component in the DOM
 ReactDOM.render(
   <MainInterface />,
   document.getElementById('calendar')

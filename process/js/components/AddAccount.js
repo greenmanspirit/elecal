@@ -1,10 +1,25 @@
+/*
+ * The AddAccount Component is a modal for adding account details.
+ */
+
+/*
+ * Imports
+ */
 const React = require('react');
 
+/*
+ * React Code
+ */
 let AddAccount = React.createClass({
+  // Pass onto the parent component that the user wants to hide the AddAccount
+  //   modal.
   toggleAddAccount: function() {
-    this.props.handleAddAccountToggle();
-  },
-  handleAddAccount: function(e) {
+    this.props.toggleAddAccount();
+  }, //toggleAddAccount
+
+  // Gather up the form values and pass them onto the parent component to be
+  //   added as an account
+  addAccount: function(e) {
     e.preventDefault();
     values = {
       name: this.inputName.value,
@@ -12,8 +27,10 @@ let AddAccount = React.createClass({
       password: this.inputPassword.value,
       server: this.inputServer.value
     }
-    this.props.handleAddAccount(values);
-  },
+    this.props.addAccount(values);
+  }, //addAccount
+
+  // Renders the component
   render: function() {
     return(
       <div className="modal fade" id="addAccount" tabIndex="-1" role="dialog">
@@ -23,7 +40,7 @@ let AddAccount = React.createClass({
               <button type="button" className="close" aria-label="Close" onClick={this.toggleAddAccount}><span aria-hidden="true">&times;</span></button>
               <h4 className="modal-title">Add Account</h4>
             </div>
-            <form className="modal-body add-appointment form-horizontal" onSubmit={this.handleAddAccount}>
+            <form className="modal-body add-appointment form-horizontal" onSubmit={this.addAccount}>
               <div className="form-group">
                 <label className="col-sm-3 control-label" htmlFor="name">Name</label>
                 <div className="col-sm-9">
@@ -60,8 +77,8 @@ let AddAccount = React.createClass({
           </div>
         </div>
       </div>
-    ) //return
-  } //render
-}); //UnlockAccounts
+    ) // return
+  } // render
+}); // AddAccount
 
 module.exports = AddAccount;

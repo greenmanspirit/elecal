@@ -1,9 +1,24 @@
+/*
+ * The Accounts Component displays a list of Account Components as well as
+ *   controls to manage accounts.
+ */
+
+/*
+ * Imports
+ */
 const React = require('react');
 
+/*
+ * React Code
+ */
 let Account = React.createClass({
+  // Pass onto the parent component that the user wants to see the AddAccount
+  //   modal.
   toggleAddAccount: function () {
-    this.props.handleAddAccountToggle();
-  },
+    this.props.toggleAddAccount();
+  }, //toggleAddAccount
+
+  // Renders the component
   render: function() {
     return(
       <div id="accounts">
@@ -23,8 +38,8 @@ let Account = React.createClass({
         </div>
         <ul className="accounts">{this.props.accounts}</ul>
       </div>
-    )
-}
-}); //Accounts
+    ); //return
+  } //render
+}); //Account
 
 module.exports = Account;
