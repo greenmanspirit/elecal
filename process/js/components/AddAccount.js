@@ -50,7 +50,8 @@ let AddAccount = React.createClass({
               <div className="form-group">
                 <label className="col-sm-3 control-label" htmlFor="server">Server</label>
                 <div className="col-sm-9">
-                  <input type="text" className="form-control" id="server" ref={(ref) => this.inputServer = ref} placeholder="URL" />
+                  <input type="text" className="form-control" id="server" ref={(ref) => this.inputServer = ref} placeholder="Http or https url" />
+                  <p id="invalidServerError" className="text-danger">Invalid Server Url</p>
                 </div>
               </div>
               <div className="form-group">

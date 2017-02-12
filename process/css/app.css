@@ -40,3 +40,10 @@ html, body {
 #unlockError {
     display: none;
 }
+
+/*
+ * AddAccount component styling
+ */
+#invalidServerError {
+    display: none;
+}

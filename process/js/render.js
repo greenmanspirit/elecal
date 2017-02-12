@@ -18,6 +18,7 @@ const _ = require('lodash');
 const bootstrap = require('bootstrap');
 const React = require('react');
 const ReactDOM = require('react-dom');
+const validUrl = require('valid-url')
 
 // Import all of our React components
 let UnlockAccounts = require('./components/UnlockAccounts');
@@ -148,13 +149,20 @@ let MainInterface = React.createClass({
 
   // Adds a new account
   addAccount: function(values) {
-    let tmpAccounts = this.state.accounts;
-    tmpAccounts.push(values);
-    this.setState({
-      accounts: tmpAccounts,
-      showAddAccount: false
-    }); //setState
-    saveAccounts(this.state.password, tmpAccounts);
+    console.log(values.server);
+    if(validUrl.isWebUri(values.server)) {
+      let tmpAccounts = this.state.accounts;
+      tmpAccounts.push(values);
+      this.setState({
+        accounts: tmpAccounts,
+        showAddAccount: false
+      }); //setState
+      saveAccounts(this.state.password, tmpAccounts);
+    } else {
+      this.setState({
+        showInvalidServerError: true
+      })
+    }//if valid url
   }, //addAccount
 
   // Deletes an account
@@ -165,7 +173,7 @@ let MainInterface = React.createClass({
       accounts: tmpAccounts
     }); //setState
     saveAccounts(this.state.password, tmpAccounts);
-  },
+  }, //deleteAccount
 
   // Renders the component
   render: function() {
@@ -188,6 +196,10 @@ let MainInterface = React.createClass({
 
     // Dislay/Hide AddAccount modal and set focus on the name field
     if(this.state.showAddAccount === true) {
+      // If we have an error, show it
+      if(this.state.showInvalidServerError === true) {
+        $('#invalidServerError').show();
+      }
       $('#addAccount').modal('show');
       $('#addAccount').on('shown.bs.modal', function() {
         $('#name').focus();
