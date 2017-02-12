@@ -39,6 +39,7 @@ let UnlockAccounts = React.createClass({
             <form className="modal-body add-appointment form-horizontal" onSubmit={this.unlockAccounts}>
               <div className="form-group">
                 <div className="col-sm-12">
+                  <p id="unlockError" className="text-danger">Incorrect Password</p>
                   <input type="text" className="form-control" id="password" ref={(ref) => this.inputPassword = ref} placeholder="Password" />
                 </div>
               </div>

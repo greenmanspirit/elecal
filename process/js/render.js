@@ -38,7 +38,11 @@ function loadAccounts(password) {
   let decipher = crypto.createDecipher('aes-256-ctr', password)
   let accounts = decipher.update(encrypted_accounts, 'base64', 'utf8')
   accounts += decipher.final('utf8');
-  return JSON.parse(accounts);
+  try {
+    return JSON.parse(accounts);
+  } catch (err) {
+    return false;
+  }
 } //loadAccounts
 
 // Save Accounts to encrypted config file
@@ -126,13 +130,19 @@ let MainInterface = React.createClass({
         // There wasn't an error, so lets load the acccounts
         tmpAccounts = loadAccounts(password);
       }
-      // Set the post unlock state
-      this.setState({
-        accounts: tmpAccounts,
-        password: password,
-        showUnlockAccounts: false,
-        showSplash: false
-      }); //setState
+      if(tmpAccounts === false) {
+        this.setState({
+          showUnlockError: true
+        })
+      } else {
+        // Set the post unlock state
+        this.setState({
+          accounts: tmpAccounts,
+          password: password,
+          showUnlockAccounts: false,
+          showSplash: false
+        }); //setState
+      }
     }.bind(this)); //fs.access
   }, //unlockAccounts
 
@@ -162,8 +172,12 @@ let MainInterface = React.createClass({
     /*
      * Display/Hide components/modals with jQuery
      */
-    // Display/Hide UnlockAccounts modal
+    // Display/Hide UnlockAccounts modal and set focus on the password field
     if(this.state.showUnlockAccounts === true) {
+      // If we have an error, show it
+      if(this.state.showUnlockError === true) {
+        $('#unlockError').show();
+      }
       $('#unlockAccounts').on('shown.bs.modal', function() {
         $('#password').focus();
       });
@@ -172,7 +186,7 @@ let MainInterface = React.createClass({
       $('#unlockAccounts').modal('hide');
     }
 
-    // Dislay/Hide AddAccount modal
+    // Dislay/Hide AddAccount modal and set focus on the name field
     if(this.state.showAddAccount === true) {
       $('#addAccount').modal('show');
       $('#addAccount').on('shown.bs.modal', function() {
