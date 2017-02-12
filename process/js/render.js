@@ -149,7 +149,6 @@ let MainInterface = React.createClass({
 
   // Adds a new account
   addAccount: function(values) {
-    console.log(values.server);
     if(validUrl.isWebUri(values.server)) {
       let tmpAccounts = this.state.accounts;
       tmpAccounts.push(values);
