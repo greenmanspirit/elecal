@@ -63,7 +63,7 @@ let AddAccount = React.createClass({
               <div className="form-group">
                 <label className="col-sm-3 control-label" htmlFor="password">Password</label>
                 <div className="col-sm-9">
-                  <input type="text" className="form-control" id="password" ref={(ref) => this.inputPassword = ref} placeholder="Password" />
+                  <input type="password" className="form-control" id="password" ref={(ref) => this.inputPassword = ref} placeholder="Password" />
                 </div>
               </div>
               <div className="form-group">
