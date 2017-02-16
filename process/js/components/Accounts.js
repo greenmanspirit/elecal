@@ -6,7 +6,7 @@
 /*
  * Imports
  */
-const React = require('react');
+const React = require('react')
 
 /*
  * React Code
@@ -15,25 +15,25 @@ let Accounts = React.createClass({
   // Pass onto the parent component that the user wants to see the AddAccount
   //   modal.
   toggleAddAccount: function () {
-    this.props.toggleAddAccount();
-  }, //toggleAddAccount
+    this.props.toggleAddAccount()
+  }, // toggleAddAccount
 
   // Renders the component
-  render: function() {
-    return(
-      <div id="accounts" className="container-fluid">
-        <div className="row">
-          <div className="col-xs-12">
-            <button id="addAccountBtn" type="button" className="btn" onClick={this.toggleAddAccount}>
-              <span className="toolbar-item-button glyphicon glyphicon-plus-sign"></span> Add Account
+  render: function () {
+    return (
+      <div id='accounts' className='container-fluid'>
+        <div className='row'>
+          <div className='col-xs-12'>
+            <button id='addAccountBtn' type='button' className='btn' onClick={this.toggleAddAccount}>
+              <span className='toolbar-item-button glyphicon glyphicon-plus-sign' /> Add Account
             </button>
-            <div className="clear"></div>
-            <ul className="accounts media-list">{this.props.accounts}</ul>
+            <div className='clear' />
+            <ul className='accounts media-list'>{this.props.accounts}</ul>
           </div>
         </div>
       </div>
-    ); //return
-  } //render
-}); //Account
+    ) // return
+  } // render
+}) // Account
 
-module.exports = Accounts;
+module.exports = Accounts
