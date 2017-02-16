@@ -33,11 +33,14 @@ let AddAccount = React.createClass({
   // Renders the component
   render: function() {
     return(
-      <div id="addAccount" className="container-fluid">
-        <div className="row">
-          <div className="col-xs-12">
-            <h4>Add Account</h4>
-            <form className="add-appointment form-horizontal" onSubmit={this.addAccount}>
+      <div className="modal fade" id="addAccount" tabIndex="-1" role="dialog">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <button type="button" className="close" aria-label="Close" onClick={this.toggleAddAccount}><span aria-hidden="true">&times;</span></button>
+              <h4 className="modal-title">Add Account</h4>
+            </div>
+            <form className="modal-body add-appointment form-horizontal" onSubmit={this.addAccount}>
               <div className="form-group">
                 <label className="col-sm-3 control-label" htmlFor="name">Name</label>
                 <div className="col-sm-9">

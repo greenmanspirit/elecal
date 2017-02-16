@@ -1,0 +1,78 @@
+/* Import Bootstrap */
+@import url('../../node_modules/bootstrap/dist/css/bootstrap.css');
+
+/*
+ * Universal styling
+ */
+html, body {
+  background-color: #eee;
+}
+
+.vcenter {
+  position: relative;
+  top: 50%;
+  transform: translateY(-55%);
+}
+
+.alpha {
+    padding-left: 0;
+}
+
+.omega {
+    padding-right: 0;
+}
+
+.clear {
+    clear: both;
+}
+
+.toolbar {
+    width: 100%;
+    background-color: #333;
+    height: 100vh;
+    float: left;
+}
+
+.toolbar-item {
+    margin: 0;
+    padding: 10px;
+    color: #eee;
+    font-size: 1.1em;
+    cursor: pointer;
+}
+
+.toolbar-item.selected {
+    color: #333;
+    background-color: #eee;
+}
+
+/*
+ * Accounts component styling
+ */
+#accounts {
+    float: left;
+    height: 100vh;
+}
+
+.accounts {
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 85vh;
+}
+
+#addAccount {
+    display: none;
+}
+
+#addAccountBtn {
+    margin-top: 7px;
+    margin-bottom: 7px;
+    float: right;
+}
+
+/*
+ * AddAccount component styling
+ */
+#invalidServerError {
+    display: none;
+}

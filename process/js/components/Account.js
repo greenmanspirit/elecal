@@ -25,7 +25,8 @@ let Account = React.createClass({
           <span className="glyphicon glyphicon-remove"></span></button>
         </div>
         <div className="account-info media-body">
-          <span className="account-name">{this.props.account.name}</span>
+          <h4 className="media-heading">{this.props.account.name}</h4>
+          {this.props.account.username} @ {this.props.account.server} 
         </div>
       </li>
     ); //return

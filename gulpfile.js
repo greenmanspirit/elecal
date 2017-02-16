@@ -7,14 +7,24 @@ var src = './process',
     app = './app';
 
 gulp.task('js', function() {
-  return gulp.src( src + '/js/render.js' )
+  gulp.src( src + '/js/render.js' )
     .pipe(browserify({
       transform: 'reactify',
       extensions: 'browserify-css',
       debug: true
     }))
     .on('error', function (err) {
-      console.error('Error!', err.message);
+      console.error('Error render.js!', err.message);
+    })
+    .pipe(gulp.dest(app + '/js'));
+  gulp.src( src + '/js/preferencesRender.js' )
+    .pipe(browserify({
+      transform: 'reactify',
+      extensions: 'browserify-css',
+      debug: true
+    }))
+    .on('error', function (err) {
+      console.error('Error preferencesRender.js!', err.message);
     })
     .pipe(gulp.dest(app + '/js'));
 });
@@ -24,8 +34,11 @@ gulp.task('html', function() {
 });
 
 gulp.task('css', function() {
-  gulp.src( src + '/css/*.css')
+  gulp.src( src + '/css/app.css')
   .pipe(concatCss('app.css'))
+  .pipe(gulp.dest(app + '/css'));
+  gulp.src( src + '/css/preferences.css')
+  .pipe(concatCss('preferences.css'))
   .pipe(gulp.dest(app + '/css'));
 });
 
