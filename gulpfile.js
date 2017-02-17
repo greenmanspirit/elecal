@@ -35,16 +35,16 @@ gulp.task('html', function () {
 
 gulp.task('css', function () {
   gulp.src(src + '/css/app.css')
-  .pipe(concatCss('app.css'))
-  .pipe(gulp.dest(app + '/css'))
+    .pipe(concatCss('app.css'))
+    .pipe(gulp.dest(app + '/css'))
   gulp.src(src + '/css/preferences.css')
-  .pipe(concatCss('preferences.css'))
-  .pipe(gulp.dest(app + '/css'))
+    .pipe(concatCss('preferences.css'))
+    .pipe(gulp.dest(app + '/css'))
 })
 
 gulp.task('fonts', function () {
   gulp.src('node_modules/bootstrap/dist/fonts/**/*')
-  .pipe(gulp.dest(app + '/fonts'))
+    .pipe(gulp.dest(app + '/fonts'))
 })
 
 gulp.task('watch', ['serve'], function () {
