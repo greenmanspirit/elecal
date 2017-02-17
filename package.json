@@ -4,7 +4,9 @@
   "description": "Calendar Manager",
   "main": "main.js",
   "scripts": {
-    "pack": "electron-packager . 'Elecal' --out ~/Elecal --overwrite --icon ./icons/icon"
+    "start": "electron app/main.js",
+    "pack": "electron-packager . 'Elecal' --out ~/Elecal --overwrite --icon ./icons/icon",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -17,6 +19,8 @@
   },
   "homepage": "https://github.com/greenmanspirit/elecal#readme",
   "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
     "dav": "^1.7.8",
     "electron": "^1.4.15",
     "electron-packager": "^8.5.1",
@@ -25,9 +29,11 @@
     "gulp-concat-css": "^2.3.0",
     "gulp-react": "^3.1.0",
     "gulp-run": "^1.7.1",
+    "mocha": "^3.2.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "reactify": "^1.1.1"
+    "reactify": "^1.1.1",
+    "spectron": "^3.6.0"
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
