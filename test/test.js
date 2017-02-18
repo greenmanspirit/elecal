@@ -60,3 +60,27 @@ describe('application launch', function () {
       .getTitle().should.eventually.equal('Elecal')
   })
 })
+
+describe('splash', function () {
+  this.timeout(10000)
+
+  beforeEach(function () {
+    return this.app.start()
+  })
+
+  afterEach(function () {
+    if (this.app && this.app.isRunning()) {
+      return this.app.stop()
+    }
+  })
+
+  it('shows the unlock button', function () {
+    return this.app.client.waitUntilWindowLoaded()
+      .element('#unlockBtn').isVisible().should.eventually.be.true
+  })
+
+  it('unlock button is a button', function () {
+    return this.app.client.waitUntilWindowLoaded()
+      .element('#unlockBtn').getTagName().should.eventually.equal('button')
+  })
+})

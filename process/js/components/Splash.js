@@ -26,7 +26,7 @@ let UnlockAccounts = React.createClass({
           <div className='col-sm-6 col-sm-offset-3 vcenter'>
             <h1>Elecal</h1>
             <p>In order to keep your remote calendar login information secure, you must enter a password to use Elecal.</p>
-            <button type='button' className='btn btn-primary' onClick={this.toggleUnlockAccounts} autoFocus>Unlock</button>
+            <button type='button' id='unlockBtn' className='btn btn-primary' onClick={this.toggleUnlockAccounts} autoFocus>Unlock</button>
           </div>
         </div>
       </div>
