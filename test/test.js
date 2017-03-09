@@ -17,6 +17,12 @@ const path = require('path')
 const chai = require('chai')
 const chaiAsPromised = require('chai-as-promised')
 
+process.env.HOME = path.resolve(__dirname)
+var configPath = path.join(process.env.HOME, '.config', 'elecal')
+var accountConfig = path.join(configPath, 'accounts')
+const fs = require('fs')
+const assert = require('assert')
+
 /*
  * Global variables
  */
@@ -61,7 +67,7 @@ describe('application launch', function () {
   })
 })
 
-describe('splash', function () {
+describe('Splash', function () {
   this.timeout(10000)
 
   beforeEach(function () {
@@ -82,5 +88,56 @@ describe('splash', function () {
   it('unlock button is a button', function () {
     return this.app.client.waitUntilWindowLoaded()
       .element('#unlockBtn').getTagName().should.eventually.equal('button')
+  })
+})
+
+describe('UnlockAccounts', function () {
+  this.timeout(10000)
+
+  beforeEach(function () {
+    if (fs.existsSync(accountConfig)) {
+      fs.unlinkSync(accountConfig)
+    }
+    return this.app.start()
+  })
+
+  afterEach(function () {
+    if (this.app && this.app.isRunning()) {
+      return this.app.stop()
+    }
+  })
+
+  it('form should show', function () {
+    return this.app.client.waitUntilWindowLoaded()
+      .click('//*[@id="unlockBtn"]')
+      .waitForVisible("//*[@id='unlockAccounts']", 5000).should.eventually.be.true
+  })
+
+  // This app creates an encryped accounts config file with the password the
+  //   user enters the first time they run the app.
+  it('should create account config on initial unlock', function () {
+    this.app.client.waitUntilWindowLoaded()
+      .click('//*[@id="unlockBtn"]')
+      .waitForVisible("//*[@id='unlockAccounts']", 5000)
+      .setValue('//*[@id="password"]', 'password')
+      .click('//*[@id="unlockAccounts"]/div/div/form/div[2]/div/div/button[2]')
+      .waitForVisible('//*[@id="unlockAccounts"]', 5000, true)
+      .then(function () {
+        if (fs.existsSync(accountConfig)) {
+          assert(true)
+        } else {
+          assert.fail(false, true, 'Config file not created')
+        }
+      })
+  })
+
+  it('should show error on bad password', function () {
+    fs.writeFileSync(accountConfig, '8n=')
+    return this.app.client.waitUntilWindowLoaded()
+      .click('//*[@id="unlockBtn"]')
+      .waitForVisible('//*[@id="unlockAccounts"]', 5000)
+      .setValue('//*[@id="password"]', 'badPass')
+      .click('//*[@id="unlockAccounts"]/div/div/form/div[2]/div/div/button[2]')
+      .waitForVisible('//*[@id="unlockError"]', 5000).should.eventually.be.true
   })
 })

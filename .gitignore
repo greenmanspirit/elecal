@@ -6,3 +6,4 @@ app/fonts/*.ttf
 app/fonts/*.woff
 app/fonts/*.woff2
 app/js/*.js
+test/.*
